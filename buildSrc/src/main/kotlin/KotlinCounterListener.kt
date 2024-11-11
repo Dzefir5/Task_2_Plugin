@@ -15,6 +15,7 @@ class KotlinCounterListener : CounterListener{
     }
 
     override fun enterClassDeclaration(ctx: CounterParser.ClassDeclarationContext) {
+        classCount++
     }
 
     override fun exitClassDeclaration(ctx: CounterParser.ClassDeclarationContext) {
@@ -40,7 +41,7 @@ class KotlinCounterListener : CounterListener{
     }
 
     override fun enterFunDeclaration(ctx: CounterParser.FunDeclarationContext) {
-
+        methodsCount++
     }
 
     override fun exitFunDeclaration(ctx: CounterParser.FunDeclarationContext) {
