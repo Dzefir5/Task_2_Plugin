@@ -1,3 +1,9 @@
+import com.strumenta.antlrkotlin.parsers.generated.CounterLexer
+import com.strumenta.antlrkotlin.parsers.generated.CounterParser
+import org.antlr.v4.kotlinruntime.CharStreams
+import org.antlr.v4.kotlinruntime.CommonTokenStream
+import org.antlr.v4.kotlinruntime.tree.ParseTreeWalker
+
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -19,30 +25,6 @@ fun serializeToJson(statistic: Statistic): String {
     """.trimIndent()
 }
 
-val KOTLIN_CLASS_TAGS :List<String> = listOf(
-    "class ",
-    "data class ",
-    "sealed class ",
-    "open class ",
-    "abstract class ",
-    "inner class "
-)
-val KOTLIN_FUNCTION_TAGS : List<String> = listOf(
-    "fun "
-)
-fun String.isContain(vararg tags : String): Boolean{
-    tags.forEach {
-        if(this.contains(it)) return true
-    }
-    return false
-}
-fun String.isContain(tags : Collection<String>): Boolean{
-    tags.forEach {
-        if(this.contains(it)) return true
-    }
-    return false
-}
-
 class CustomPlugin : Plugin<Project>{
     override fun apply(target: Project) {
         target.tasks.register("Analyze",StatisticTask::class.java)
@@ -52,13 +34,13 @@ class CustomPlugin : Plugin<Project>{
     }
 }
 
-abstract class StatisticTask: DefaultTask(){
+abstract class StatisticTask(val analyzeDir: String = "src", val jsonPath : String = analyzeDir+"/json"): DefaultTask(){
     @TaskAction
     fun analyzeStatistic(){
-        val srcDir = File("src")
+        val srcDir = File(analyzeDir)
         val statistics = analyzeSourceDirectory(srcDir)
-        val jsonDir = File("src/json").mkdir()
-        val json= File("src/json/jsonResult.json")
+        val jsonDir = File(jsonPath).mkdir()
+        val json= File(jsonPath+"/jsonResult.json")
         json.writeText(serializeToJson(statistics))
     }
 
@@ -70,8 +52,14 @@ abstract class StatisticTask: DefaultTask(){
             if( file.extension == "java" || file.extension == "kt" ){
                 val lines = file.readLines()
                 totalLines += lines.size
-                totalClasses += lines.count(){it.isContain(KOTLIN_CLASS_TAGS) }
-                totalMethods += lines.count(){it.isContain(KOTLIN_FUNCTION_TAGS)}
+                val lexer = CounterLexer(CharStreams.fromString(file.readText()))
+                val tokens = CommonTokenStream(lexer)
+                val parser = CounterParser(tokens)
+                val tree = parser.kotlinFile()
+                val listener =KotlinCounterListener()
+                ParseTreeWalker.DEFAULT.walk(listener,tree)
+                totalClasses+=listener.classCount
+                totalMethods+=listener.methodsCount
             }
         }
         return Statistic(totalLines,totalClasses,totalMethods)

@@ -1,19 +1,13 @@
 package org.example
 
+import java.io.File
 
-data class DATA(
-    val a : Int,
-    val b : Double
-)
-data class DATA2(
-    val a : Int,
-    val b : Double
-)
-data class DATA3(
-    val a : Int,
-    val b : Double
-)
 
-fun main() {
-    println("Hello World!")
+
+
+fun main(){
+    val inputFile = File("src/main/kotlin/Example.kt")
+    val input = inputFile.readText()
+    println(input)
+
 }
