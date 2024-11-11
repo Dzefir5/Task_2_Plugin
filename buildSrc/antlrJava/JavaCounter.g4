@@ -25,7 +25,7 @@ block
 functionDeclaration
     :
     JAVA_ACCESS_MODIFIERS?
-    JAVA_FUNCTION_MODIFIERS
+    JAVA_FUNCTION_MODIFIERS?
     javaType
     IDENTIFIER
     '(' (parameter(','parameter)*)?  ')' (':'javaType)?
@@ -59,6 +59,7 @@ expression
     |  STRING_LITERALS
     |  expression '(' (expression)* ')'
     |  expression'.'expression
+    |  expression OPERATOR expression
     ;
 
 LINE_COMMENT
@@ -103,6 +104,12 @@ STRING_LITERALS
     ;
 RETURN
     : 'return'
+    ;
+OPERATOR
+    : '+'
+    | '-'
+    | '*'
+    | '='
     ;
 IDENTIFIER : [a-zA-Z_][a-zA-Z_0-9]* ;
 VALUE : [a-zA-Z_0-9]+ ;
