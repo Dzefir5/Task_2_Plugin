@@ -34,9 +34,11 @@ class CustomPlugin : Plugin<Project>{
     }
 }
 
-abstract class StatisticTask(val analyzeDir: String = "src", val jsonPath : String = analyzeDir+"/json"): DefaultTask(){
+abstract class StatisticTask(): DefaultTask(){
     @TaskAction
     fun analyzeStatistic(){
+        val analyzeDir: String = "src"
+        val jsonPath : String = analyzeDir+"/json"
         val srcDir = File(analyzeDir)
         val statistics = analyzeSourceDirectory(srcDir)
         val jsonDir = File(jsonPath).mkdir()

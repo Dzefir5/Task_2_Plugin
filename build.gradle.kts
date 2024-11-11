@@ -1,8 +1,7 @@
 
-
-
 plugins {
     kotlin("jvm") version "2.0.20"
+
 }
 
 group = "org.example"
@@ -14,6 +13,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+
 }
 
 tasks.test {
@@ -22,4 +22,5 @@ tasks.test {
 kotlin {
     jvmToolchain(21)
 }
+
 apply<CustomPlugin>()

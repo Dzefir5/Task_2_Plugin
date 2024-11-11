@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
+    kotlin("jvm") version "1.9.22"
     id("com.strumenta.antlr-kotlin") version "1.0.1"
 }
 
@@ -12,6 +13,9 @@ repositories {
 dependencies {
     implementation("org.antlr:antlr4:4.13.1")
     implementation("com.strumenta:antlr-kotlin-runtime:1.0.1")
+}
+kotlin {
+    jvmToolchain(21)
 }
 val generateKotlinGrammarSource = tasks.register<AntlrKotlinTask>("generateKotlinGrammarSource") {
     dependsOn("cleanGenerateKotlinGrammarSource")
@@ -32,8 +36,9 @@ val generateKotlinGrammarSource = tasks.register<AntlrKotlinTask>("generateKotli
     arguments = listOf("-visitor")
 
     // Generated files are outputted inside build/generatedAntlr/{package-name}
-    val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"
-    outputDirectory = layout.buildDirectory.dir(outDir).get().asFile
+    //val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"
+    val outDir = "src/main/kotlin/generatedAntlr"
+    outputDirectory = layout.projectDirectory.dir(outDir).asFile
 }
 tasks.withType<KotlinCompile> {
     dependsOn(generateKotlinGrammarSource)
