@@ -1,8 +1,11 @@
-class A{
-    fun test() : Unit {
+class A {
+    fun test(): Unit {
 
     }
 
+    fun one(a: Int): Int {
+        return a
+    }
 }
 class Transaction{
     class Deposit(val clientId : Int,val currencyKey : String, val amount : Double)

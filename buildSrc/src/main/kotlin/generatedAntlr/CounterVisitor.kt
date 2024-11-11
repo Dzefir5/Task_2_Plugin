@@ -1,4 +1,4 @@
-// Generated from D:/00001/Test_Plugin/buildSrc/antlr/Counter.g4 by ANTLR 4.13.1
+// Generated from D:/00001/Test_Plugin/buildSrc/antlrKotlin/Counter.g4 by ANTLR 4.13.1
 package com.strumenta.antlrkotlin.parsers.generated
 
 import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor

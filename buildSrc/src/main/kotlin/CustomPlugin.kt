@@ -1,3 +1,6 @@
+import com.strumenta.antlrjava.parsers.generated.JavaCounterLexer
+import com.strumenta.antlrjava.parsers.generated.JavaCounterListener
+import com.strumenta.antlrjava.parsers.generated.JavaCounterParser
 import com.strumenta.antlrkotlin.parsers.generated.CounterLexer
 import com.strumenta.antlrkotlin.parsers.generated.CounterParser
 import org.antlr.v4.kotlinruntime.CharStreams
@@ -51,7 +54,7 @@ abstract class StatisticTask(): DefaultTask(){
         var totalMethods : Int = 0
         var totalLines: Int = 0
         dir.walk().forEach { file ->
-            if( file.extension == "java" || file.extension == "kt" ){
+            if( file.extension == "kt" ){
                 val lines = file.readLines()
                 totalLines += lines.size
                 val lexer = CounterLexer(CharStreams.fromString(file.readText()))
@@ -59,6 +62,18 @@ abstract class StatisticTask(): DefaultTask(){
                 val parser = CounterParser(tokens)
                 val tree = parser.kotlinFile()
                 val listener =KotlinCounterListener()
+                ParseTreeWalker.DEFAULT.walk(listener,tree)
+                totalClasses+=listener.classCount
+                totalMethods+=listener.methodsCount
+            }
+            if( file.extension == "java" ){
+                val lines = file.readLines()
+                totalLines += lines.size
+                val lexer = JavaCounterLexer(CharStreams.fromString(file.readText()))
+                val tokens = CommonTokenStream(lexer)
+                val parser = JavaCounterParser(tokens)
+                val tree = parser.javaFile()
+                val listener =JavaCounterListener()
                 ParseTreeWalker.DEFAULT.walk(listener,tree)
                 totalClasses+=listener.classCount
                 totalMethods+=listener.methodsCount

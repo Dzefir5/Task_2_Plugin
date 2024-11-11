@@ -32,10 +32,10 @@ varDeclaration
     ;
 
 expressionStatement
-    :  expression ';'
+    :  expression
     ;
 returnStatement
-    :  RETURN expression ';'
+    :  RETURN expression
     ;
 
 statement
@@ -67,6 +67,12 @@ PACKAGES
 
 KOTLIN_CLASS
     : 'class'
+    | 'data class'
+    | 'open class'
+    | 'sealed class'
+    | 'final class'
+    | 'inner class'
+    | 'object'
     ;
 KOTLIN_FUN
    : 'fun'
